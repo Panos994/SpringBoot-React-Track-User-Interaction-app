@@ -21,12 +21,18 @@ const Login = () => {
         e.preventDefault();
         try {
             const response = await axiosInstance.post('auth/signin', form);
+            console.log('Server response:', response.data); // Log the entire response
             if (response.status === 200) {
-                const token = response.data.token;
-                console.log('Received JWT Token:', token); // Ensure this logs the token
-                localStorage.setItem('jwtToken', token);
-                axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-                navigate('/track');
+                const token = response.data.accessToken; // Ensure correct key is used
+                console.log('Received JWT Token:', token); // Log the token
+                if (token) {
+                    localStorage.setItem('jwtToken', token);
+                    console.log('Token stored in localStorage:', localStorage.getItem('jwtToken')); // Verify storage
+                    axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+                    navigate('/track');
+                } else {
+                    console.error('Token is undefined');
+                }
             } else {
                 alert('Login failed.');
             }
@@ -35,8 +41,6 @@ const Login = () => {
             alert('Error during login. Please check your credentials and try again.');
         }
     };
-
-
 
     return (
         <div>
