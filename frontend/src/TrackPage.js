@@ -6,6 +6,9 @@ const TrackPage = () => {
     const navigate = useNavigate();
     const [typingStartTime, setTypingStartTime] = useState(null);
 
+    const [eventTypes, setEventTypes] = useState([]);
+    const [error, setError] = useState(null);
+
     useEffect(() => {
         const token = localStorage.getItem('jwtToken');
         console.log('JWT Token in TrackPage:', token); // Log the token
@@ -16,12 +19,12 @@ const TrackPage = () => {
 
         const handleMouseMove = _.throttle((event) => {
             const trackingEvent = {
-                ip: '127.0.0.1', // Ideally, get the real IP on the server-side
+                ip: '127.0.0.1',
                 eventType: 'mouse_move',
                 eventData: `Mouse moved to (${event.clientX}, ${event.clientY})`,
                 timestamp: new Date().toISOString(),
-                website: { id: 1 }, // Example website ID
-                sessionId: 'unique-session-id', // Generate or retrieve a session ID
+                website: { id: 1 },
+                sessionId: 'unique-session-id',
                 mouseCoordinates: `x:${event.clientX},y:${event.clientY}`,
                 pageUrl: window.location.href,
                 elementId: event.target.id
@@ -112,13 +115,13 @@ const TrackPage = () => {
 
     const sendTrackingEvent = async (event, token) => {
         try {
-            console.log('JWT Token in sendTrackingEvent:', token); // Log the token
+            console.log('JWT Token in sendTrackingEvent:', token);
 
             const response = await fetch('http://localhost:9090/api/tracking', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`  // Ensure token is included
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify(event)
             });
@@ -133,13 +136,62 @@ const TrackPage = () => {
         }
     };
 
+
+    useEffect(() => {
+        const fetchEventTypes = async () => {
+            try {
+                const token = localStorage.getItem('jwtToken');
+                if (!token) {
+                    throw new Error('No token found');
+                }
+
+                const response = await fetch('http://localhost:9090/api/tracking/event-types', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                setEventTypes(data);
+            } catch (error) {
+                setError(error.message);
+                console.error('Error fetching event types:', error);
+            }
+        };
+
+        fetchEventTypes();
+    }, []);
+
+
     return (
         <div>
             <h1>Track User Interactions</h1>
             <button id="button1">Click Me</button>
             <input id="inputField" type="text" placeholder="Type something..." />
+            <button onClick={() => navigate('/events?eventType={event_type}')}>View Events</button>
+
+
+            <h2>All Event Types</h2>
+            {error ? (
+                <p>Error: {error}</p>
+            ) : (
+                <ul>
+                    {eventTypes.map((eventType, index) => (
+                        <li key={index}>{eventType}</li>
+                    ))}
+                </ul>
+            )}
+
         </div>
     );
 };
+
+
+
 
 export default TrackPage;
