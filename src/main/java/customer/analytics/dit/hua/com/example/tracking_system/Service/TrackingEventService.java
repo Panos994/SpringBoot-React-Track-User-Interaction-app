@@ -2,12 +2,15 @@ package customer.analytics.dit.hua.com.example.tracking_system.Service;
 
 
 import customer.analytics.dit.hua.com.example.tracking_system.Entity.TrackingEvent;
-import customer.analytics.dit.hua.com.example.tracking_system.Entity.Websites;
 import customer.analytics.dit.hua.com.example.tracking_system.Repositories.TrackingEventRepository;
-import customer.analytics.dit.hua.com.example.tracking_system.Repositories.WebsiteRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -16,8 +19,7 @@ public class TrackingEventService {
     @Autowired
     private TrackingEventRepository trackingEventRepository;
 
-    @Autowired
-    private WebsiteRepository websiteRepository; // Optional if needed
+
 /*
     public TrackingEvent saveEvent(TrackingEvent event) {
         // Validate or fetch the website if necessary
@@ -33,7 +35,39 @@ public class TrackingEventService {
         return trackingEventRepository.save(event);
     }
 
+
+
+
+    @Transactional
     public List<TrackingEvent> getEventsByWebsiteId(Long websiteId) {
         return trackingEventRepository.findByWebsiteId(websiteId);
     }
+
+    @Transactional
+    public List<TrackingEvent> getEventsByType(String eventType) {
+        return trackingEventRepository.findByEventType(eventType);
+    }
+
+
+
+    @Transactional
+    public List<String> getDistinctEventTypes() {
+        return trackingEventRepository.findDistinctEventTypes();
+    }
+
+
+
+
+
+
+
+
+    @Transactional
+    public List<TrackingEvent> findAll() {
+        return trackingEventRepository.findAll();
+    }
+
 }
+
+
+

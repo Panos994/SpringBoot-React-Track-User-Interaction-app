@@ -3,13 +3,15 @@ package customer.analytics.dit.hua.com.example.tracking_system.RESTController;
 
 import customer.analytics.dit.hua.com.example.tracking_system.Entity.TrackingEvent;
 import customer.analytics.dit.hua.com.example.tracking_system.Entity.Websites;
-import customer.analytics.dit.hua.com.example.tracking_system.Repositories.TrackingEventRepository;
 import customer.analytics.dit.hua.com.example.tracking_system.Repositories.WebsiteRepository;
 import customer.analytics.dit.hua.com.example.tracking_system.Service.TrackingEventService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.data.domain.Pageable;
+import java.time.LocalDateTime;
 import java.util.List;
 @RestController
 @RequestMapping("/api/tracking")
@@ -20,6 +22,8 @@ public class TrackingEventController {
 
     @Autowired
     private WebsiteRepository websiteRepository; // Optional if needed
+
+
 
     @PostMapping
     public ResponseEntity<TrackingEvent> createEvent(@RequestBody TrackingEvent event) {
@@ -39,9 +43,56 @@ public class TrackingEventController {
         return ResponseEntity.ok(savedEvent);
     }
 
-    @GetMapping("/events/{websiteId}")
+
+
+    @GetMapping
+    public ResponseEntity<List<TrackingEvent>> getAllTrackingEvents() {
+        //logger.info("Received request to get all tracking events");
+        List<TrackingEvent> events = trackingEventService.findAll();
+        return ResponseEntity.ok(events);
+    }
+
+
+
+
+    @GetMapping("/website-events/{websiteId}/all")
     public ResponseEntity<List<TrackingEvent>> getEventsByWebsite(@PathVariable Long websiteId) {
         List<TrackingEvent> events = trackingEventService.getEventsByWebsiteId(websiteId);
         return ResponseEntity.ok(events);
     }
+
+
+
+
+
+
+
+//ok
+    @GetMapping("/event-types")
+    public ResponseEntity<List<String>> getAllEventTypes() {
+        List<String> eventTypes = trackingEventService.getDistinctEventTypes();
+        return ResponseEntity.ok(eventTypes);
+    }
+
+
+    @GetMapping("/events-by-type")
+    public ResponseEntity<List<TrackingEvent>> getEventsByType(@RequestParam String eventType) {
+        List<TrackingEvent> events = trackingEventService.getEventsByType(eventType);
+        return ResponseEntity.ok(events);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

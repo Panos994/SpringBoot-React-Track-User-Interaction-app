@@ -40,7 +40,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration corsConfig = new CorsConfiguration();
-                    corsConfig.setAllowedOrigins(Arrays.asList("http://localhost:4000"));
+                    corsConfig.setAllowedOrigins(Arrays.asList("http://localhost:4001"));
                     corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     corsConfig.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
                     corsConfig.setAllowCredentials(true);
@@ -55,6 +55,7 @@ public class SecurityConfig {
                                 "/v2/api-docs/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html"
+
                         ).permitAll()
                         .requestMatchers("/api/tracking/**").authenticated()  // Explicitly specify tracking endpoints
                         .requestMatchers("/api/users/**").authenticated()
