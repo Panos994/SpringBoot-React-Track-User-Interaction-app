@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import h337 from 'heatmap.js';
-
+//under construction
 const Heatmap = ({ events }) => {
     useEffect(() => {
         const heatmapInstance = h337.create({

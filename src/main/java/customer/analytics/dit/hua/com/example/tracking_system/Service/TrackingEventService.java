@@ -38,10 +38,7 @@ public class TrackingEventService {
 
 
 
-    @Transactional
-    public List<TrackingEvent> getEventsByWebsiteId(Long websiteId) {
-        return trackingEventRepository.findByWebsiteId(websiteId);
-    }
+
 
     @Transactional
     public List<TrackingEvent> getEventsByType(String eventType) {
@@ -62,10 +59,7 @@ public class TrackingEventService {
 
 
 
-    @Transactional
-    public List<TrackingEvent> findAll() {
-        return trackingEventRepository.findAll();
-    }
+
 
 }
 

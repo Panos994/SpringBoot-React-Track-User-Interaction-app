@@ -45,21 +45,7 @@ public class TrackingEventController {
 
 
 
-    @GetMapping
-    public ResponseEntity<List<TrackingEvent>> getAllTrackingEvents() {
-        //logger.info("Received request to get all tracking events");
-        List<TrackingEvent> events = trackingEventService.findAll();
-        return ResponseEntity.ok(events);
-    }
 
-
-
-
-    @GetMapping("/website-events/{websiteId}/all")
-    public ResponseEntity<List<TrackingEvent>> getEventsByWebsite(@PathVariable Long websiteId) {
-        List<TrackingEvent> events = trackingEventService.getEventsByWebsiteId(websiteId);
-        return ResponseEntity.ok(events);
-    }
 
 
 
@@ -75,15 +61,17 @@ public class TrackingEventController {
     }
 
 
-    @GetMapping("/events-by-type")
-    public ResponseEntity<List<TrackingEvent>> getEventsByType(@RequestParam String eventType) {
+
+
+
+
+    // New endpoint to get events by event type using a path variable
+    //under construction
+    @GetMapping("/{eventType}")
+    public ResponseEntity<List<TrackingEvent>> getEventsByEventType(@PathVariable String eventType) {
         List<TrackingEvent> events = trackingEventService.getEventsByType(eventType);
         return ResponseEntity.ok(events);
     }
-
-
-
-
 
 
 
